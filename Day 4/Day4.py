@@ -4,28 +4,18 @@ class Board:
         self.rows = [rawboard[x:x+5] for x in range(0, 25, 5)]
         self.cols = list(zip(*self.rows))
         self.list = rawboard
-        self.pool = []
 
-    def hasWon(self, pool: list =[]):
-        if pool == []:
-            pool = self.pool
-
+    def hasWon(self, pool: list):
         rows = [all([x in pool for x in row]) for row in self.rows]
         cols = [all([x in pool for x in row]) for row in self.cols]
         return any(rows + cols)
 
-    def score(self, pool:list =[]):
-        if pool == []:
-            pool = self.pool
-            
+    def score(self, pool:list):
         sum = 0
         for item in filter(lambda x: x not in pool, self.list):
             sum += int(item)
         last_picked = int(pool[-1])
         return sum * last_picked
-
-    def usePool(self, pool):
-        self.pool = pool
 
 def part1():
     for size in range(5, len(complete_pool)):
