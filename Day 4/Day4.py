@@ -1,11 +1,9 @@
-
 class Board:
     def __init__(self, data: str) -> None:
         rawboard = data.split()
         self.rows = [rawboard[x:x+5] for x in range(0, 25, 5)]
         self.cols = list(zip(*self.rows))
         self.list = rawboard
-
         self.pool = []
 
     def hasWon(self, pool: list =[]):
@@ -38,7 +36,6 @@ def part1():
             for i, s in enumerate(state):
                 if s:
                     return boards[i].score(current_pool)
-            break
 
 def part2():
     for size in range(5, len(complete_pool)):
@@ -54,7 +51,6 @@ def part2():
                 # Find the board that hasn't won yet in the last pool
                 if not s:
                     return boards[i].score(current_pool)
-            break
 
 def getFileLines(filename):
     with open(filename, "r") as file:
