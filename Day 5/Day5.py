@@ -11,29 +11,51 @@ class Vector:
         self.start = (x1, y1)
         (self.minX, self.maxX) = (x1, x2) if x1 < x2 else (x2, x1)
         (self.minY, self.maxY) = (y1, y2) if y1 < y2 else (y2, y1)
-        
 
-        if x1 == x2:
-            self.locations = [[self.minY, x] for x in range(self.minX, self.maxX + 1)]
+
+
+        self.isHorizontal = x1 == x2
+        self.isVertical = y1 == y2
+        if self.isVertical:
+            self.locations = [
+                [self.minY, x]
+                    for x in range(self.minX, self.maxX + 1)]
             return
-        if y1 == y2:
-            self.locations = [[y, self.minX] for y in range(self.minY, self.maxY + 1)]
-            return 
+            
+        if self.isHorizontal:
+            self.locations = [
+                [y, self.minX]
+                    for y in range(self.minY, self.maxY + 1)]
+            return
+        
+        if not self.isHorizontal and not self.isVertical:
+            diagonal = (x2 - x1, y2 - y1)
+            divisor = abs(gcd(*diagonal))
+            self.diagonal = list(map(lambda x: int(int(x)/divisor), diagonal))
+            self.diagonalCount = divisor;
 
-        diagonal = (x2 - x1, y2 - y1)
-        self.diagonalCount = abs(gcd(*diagonal))
-        self.diagonal = list(map(lambda x: int(int(x)/self.diagonalCount), diagonal))
-        self.locations = [[self.start[0] + self.diagonal[0] * d, self.start[1] + self.diagonal[1] * d] for d in range(self.diagonalCount + 1)]
-        
-        
+            self.locations = [
+                [self.start[1] + self.diagonal[1] * d, self.start[0] + self.diagonal[0] * d]
+                    for d in range(self.diagonalCount + 1)]
+            return
 
     def editMap(self, map):
-        for location in self.locations:
-            print(location)
-            a = map[location[0]]
-            b = a[location[1]]
-            print(b)
-            #[location[1]] += 1
+        if self.isVertical:
+            for x in range(self.minX, self.maxX + 1):
+                map[self.minY][x] += 1
+                
+            return map
+
+        if self.isHorizontal:
+            for y in range(self.minY, self.maxY + 1):
+                map[y][self.minX] += 1
+            return map
+
+        for d in range(self.diagonalCount + 1):
+            x = self.start[0] + self.diagonal[0] * d
+            y = self.start[1] + self.diagonal[1] * d
+            map[y][x] += 1
+        return map
 
 def getFileLines(filename):
     with open(filename, "r") as file:
