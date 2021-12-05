@@ -1,6 +1,6 @@
 class Board:
     def __init__(self, data: str) -> None:
-        rawboard = data.split()
+        rawboard = list(map(int, data.split()))
         self.rows = [rawboard[x:x+5] for x in range(0, 25, 5)]
         self.cols = list(zip(*self.rows))
         self.list = rawboard
@@ -11,11 +11,9 @@ class Board:
         return any(rows + cols)
 
     def score(self, pool:list):
-        sum = 0
-        for item in filter(lambda x: x not in pool, self.list):
-            sum += int(item)
+        ans = sum(filter(lambda x: x not in pool, self.list), 0)
         last_picked = int(pool[-1])
-        return sum * last_picked
+        return ans * last_picked
 
 def part1():
     for size in range(5, len(complete_pool)):
@@ -47,7 +45,7 @@ def getFileLines(filename):
         return file.read()
 
 data = getFileLines("Day 4/Day4").split('\n\n')
-complete_pool = list(data.pop(0).split(','))
+complete_pool = list(map(int ,data.pop(0).split(',')))
 boards = [Board(datum) for datum in data]
 
 
