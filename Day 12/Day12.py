@@ -1,7 +1,7 @@
 
 from collections import defaultdict
 
-with open("Day 11/Small", "r") as file:
+with open("Day 12/Day12", "r") as file:
     pairs = [tuple(line.split("-")) for line in file.read().splitlines()]
 
 nodes = defaultdict(list[str])
