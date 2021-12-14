@@ -1,39 +1,50 @@
 from collections import defaultdict, Counter
-from copy import deepcopy
-from threading import Thread
+from copy import copy
+import concurrent.futures
+from os import error
 
-with open("Day 14/Example", "r") as file:
+with open("Day 14/Day14", "r") as file:
     pairs = file.read().split('\n\n')
     data, instructions = pairs
 
 polymerTable = defaultdict(str)
-polymerTableEdit = defaultdict(str)
+polymerTableEdit = defaultdict(tuple[str, str])
+counting = {}
 for instruction in instructions.splitlines():
     requires, inserts = instruction.split(" -> ")
     polymerTable[requires] = inserts
-    polymerTableEdit[requires] = requires[0] + inserts + requires[1]
+    polymerTableEdit[requires] = (requires[0] + inserts, inserts + requires[1])
+    counting[inserts] = 0
+
+lookup = defaultdict(defaultdict)
+def getChunkAfterStep(chunk: str, step: int, counter: Counter):
+    if not lookup[step]:
+        lookup[step] = defaultdict()
+    if lookup[step].get(chunk, None) == None:
+        lookup[step][chunk] = getChunkAfterStepInternal(chunk, step, counter)
+    return lookup[step][chunk]
+
+def getChunkAfterStepInternal(chunk: str, step: int, counter: Counter):
+    if step == 0:
+        return Counter(chunk)
+    else:
+        a,b = polymerTableEdit[chunk]
+
+        if step == 1: return counter + getChunkAfterStep(b, step-1, counter)
+        else:
+            return getChunkAfterStep(a, step-1, counter) + getChunkAfterStep(b, step-1, counter)
 
 data = list(data)
 numSteps = 10
-
-
-difference = [0]
-dataCopy = list(data)
+out = Counter()
 for i in range(len(data)):
     chunk = "".join(data[i:i+2])
-    if chunk in polymerTable.keys():
-        for step in range(numSteps):
-            newChunk = polymerTableEdit[chunk]
-data = "".join(dataCopy)
+    if len(chunk) == 2:
+        out += getChunkAfterStep(chunk, numSteps, Counter())
 
-    sortedData = Counter(data).most_common()
-    mostCommon, leastCommon = sortedData[0], sortedData[-1]
-    ans = (mostCommon[1] - leastCommon[1])
-    difference.append(ans - difference[-1])
-    print(step, ans, difference)
-
-print("Complete Work")
-sortedData = Counter(data).most_common()
-mostCommon, leastCommon = sortedData[0], sortedData[-1]
-print(mostCommon[1] - leastCommon[1])
-print(sum(difference[-2:]))
+sorted = out.most_common()
+most, least = sorted[0], sorted[-1]
+print(most, least)
+print(most[1] - least[1])
+print(out)
+quit()
