@@ -35,16 +35,21 @@ def getChunkAfterStepInternal(chunk: str, step: int, counter: Counter):
             return getChunkAfterStep(a, step-1, counter) + getChunkAfterStep(b, step-1, counter)
 
 data = list(data)
-numSteps = 10
-out = Counter()
-for i in range(len(data)):
-    chunk = "".join(data[i:i+2])
-    if len(chunk) == 2:
-        out += getChunkAfterStep(chunk, numSteps, Counter())
+def task(numSteps: int) -> Counter:
+    out = Counter()
+    for i in range(len(data)):
+        chunk = "".join(data[i:i+2])
+        if len(chunk) == 2:
+            out += getChunkAfterStep(chunk, numSteps, Counter())
+    return out
 
-sorted = out.most_common()
+#part 1
+sorted = task(10).most_common()
 most, least = sorted[0], sorted[-1]
-print(most, least)
 print(most[1] - least[1])
-print(out)
-quit()
+#part 2
+sorted = task(40).most_common()
+most, least = sorted[0], sorted[-1]
+print(most[1] - least[1])
+
+print(sum(map(lambda step: lookup[step].__len__(), range(40))))
