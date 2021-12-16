@@ -126,5 +126,4 @@ def compute(instructions):
     if len(instructions) == 1: return instructions[0]
     return instructions[0].do([compute(item) for item in instructions[1:]])
 
-# print(instructions)
 print(compute(instructions))
