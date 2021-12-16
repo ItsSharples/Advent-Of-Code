@@ -39,7 +39,10 @@ class Operator(IntEnum):
             case(_): return numbers
 
 
-def readPacket(data: list[str]):
+def parse(data: list[str]):
+    return parseWithIterator(data)[0]
+
+def parseWithIterator(data: list[str]):
     length = len(data)
     iterator = 0
     stage: Stages = Stages.PACKET
@@ -90,7 +93,7 @@ def readPacket(data: list[str]):
                 # print(f"Count: {number}, Packet Size: {packetSize}")
                 values = []
                 for _ in range(number):
-                    answer, usedIterator = readPacket(data[iterator: iterator+packetSize])
+                    answer, usedIterator = parseWithIterator(data[iterator: iterator+packetSize])
                     iterator += usedIterator
                     if answer: output.append(answer)
                 
@@ -103,7 +106,7 @@ def readPacket(data: list[str]):
                 goneThrough = 0
                 values = []
                 while goneThrough < packetSize:
-                    answer, usedIterator = readPacket(data[iterator: iterator+packetSize])
+                    answer, usedIterator = parseWithIterator(data[iterator: iterator+packetSize])
                     iterator += usedIterator
                     goneThrough += usedIterator
                     if answer: output.append(answer)
@@ -120,7 +123,7 @@ with open("Day 16/Day16", "rb") as file:
     missingLeading = len(fileStr) * 4
     filePadded = fileData.zfill(missingLeading)
 
-instructions, _ = readPacket(filePadded)
+instructions = parse(filePadded)
 
 def compute(instructions):
     if len(instructions) == 1: return instructions[0]
