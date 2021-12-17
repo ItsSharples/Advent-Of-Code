@@ -13,10 +13,9 @@ maxX = 250
 # minX = 20
 # maxX = 30
 
-def lerp(a, b, t):
-    return a + (b-a) * t
-
 out = []
+# To be fair, we're brutally exploiting that we know that y is negative. A more generic solution is hard
+
 # Using n(n+1)/2
 #   we can tell that x must be more than 20 to ever reach the area
 #   The stop is then just a number high enough that there are less steps than
@@ -24,7 +23,7 @@ out = []
 for vX in range(20, 260):
 # For y, we start at minY, because the first step could complete the task
 #   And we end at -minY, because that's the velocity that gets it the highest
-    for vY in range(-105, 105):
+    for vY in range(minY, -minY):
         x, y = 0, 0
         veloX, veloY = vX, vY
         while True:
