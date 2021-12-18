@@ -148,7 +148,7 @@ def searchCoords(state: list) -> tuple[list, list]:
         coord = [0] * 10
         toExplode = []
         toSplit = []
-        exploded = False
+
         while incrementCoord(state, coord) != coord:
             if shouldExplode(state, coord): toExplode.append(coord)
             if shouldSplit(state, coord): toSplit.append(coord)
