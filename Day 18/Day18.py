@@ -284,8 +284,6 @@ print(maxValue)
 
 # maxValue = 0
 # for indexPair in list(permutations(range(len(input)), 2)):
-#     # Exploiting that '[]' is a valid python statement
-#     # Doing this in the file input seems to fuck up inside of 'permutations'
 #     lstPair = [input[indexPair[0]], input[indexPair[1]]]
 #     maxValue = max(getMagnitudeForInput(lstPair), maxValue)
 # print(maxValue)
